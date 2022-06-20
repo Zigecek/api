@@ -4,7 +4,7 @@ require("./utils/mongoose").init();
 const express = require("express");
 const app = express();
 
-app.use(express.json());
+app.use(require("body-parser").json());
 
 const routes = [
   {
