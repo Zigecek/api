@@ -1,13 +1,11 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
   "main": "api.js",
   "scripts": {
     "start": "pm2 start ./api.js --time -- trace-warnings",
     "start2": "node ./api.js",
-    "i": "npm i express@latest dotenv@latest",
-    "uni": "npm uninstall dotenv express"
+    "i": "npm i express@latest dotenv@latest mongoose@latest",
+    "uni": "npm uninstall dotenv express mongoose"
   },
   "keywords": [],
   "author": "Jan Kozohorský",
@@ -26,5 +24,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Zigecek/api.git"
+  },
+  "dependencies": {
+    "mongoose": "^6.4.0"
   }
 }
