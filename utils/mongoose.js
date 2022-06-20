@@ -1,6 +1,4 @@
-
 const mongoose = require("mongoose");
-const config = require("../config");
 
 module.exports = {
   init: () => {
@@ -13,11 +11,7 @@ module.exports = {
       family: 4,
     };
 
-    mongoose.connect(
-      process.platform != "linux" && config.ofi != true
-        ? process.env.MONGOOSE_KEY2
-        : process.env.MONGOOSE_KEY
-    );
+    mongoose.connect(process.env.MONGOOSE_KEY);
 
     mongoose.Promise = global.Promise;
 
@@ -31,7 +25,7 @@ module.exports = {
       console.error(`MongoDB - Chyba: \n${err.stack}`);
     });
 
-    mongoose.connection.on("dissconnected", () => {
+    mongoose.connection.on("disconnected", () => {
       console.log(" ");
       console.warn("MongoDB - Připojení přerušeno.");
     });
