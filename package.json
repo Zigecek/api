@@ -4,9 +4,27 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "pm2 start ./api.js --time -- trace-warnings",
+    "start2": "node ./api.js",
+    "i": "npm i express@latest dotenv@latest",
+    "uni": "npm uninstall dotenv express"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Jan Kozohorský",
+  "license": "ISC",
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2021
+    },
+    "env": {
+      "es2021": true
+    },
+    "rules": {
+      "require-await": 1
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zigecek/api.git"
+  }
 }
