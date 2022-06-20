@@ -2,9 +2,11 @@ require("dotenv").config();
 require("./utils/mongoose").init();
 
 const express = require("express");
+const bodyparser = require("body-parser");
+
 const app = express();
 
-app.use(require("body-parser").json());
+app.use(bodyparser.json());
 
 const routes = [
   {

@@ -1,5 +1,5 @@
 {
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "api.js",
   "scripts": {
     "start": "pm2 start ./api.js --time -- trace-warnings",
@@ -7,9 +7,7 @@
     "i": "npm i express@latest dotenv@latest mongoose@latest body-parser@latest",
     "uni": "npm uninstall dotenv express mongoose body-parser"
   },
-  "keywords": [],
   "author": "Jan Kozohorský",
-  "license": "ISC",
   "eslintConfig": {
     "parserOptions": {
       "ecmaVersion": 2021
