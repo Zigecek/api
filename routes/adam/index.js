@@ -33,6 +33,11 @@ adam.post("/ulozit", (req, res, next) => {
 
 adam.get("/vysledky", async (req, res, next) => {
   let vysledky = await Vysledek.find({});
+  vysledky.sort(function (a, b) {
+    if (a.body > b.body) return -1;
+    if (a.body < b.body) return 1;
+    return 0;
+  });
   console.log(vysledky);
   res.status(200).send(vysledky);
 });
