@@ -1,8 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
+var cors = require("cors");
 const Vysledek = require("../../models/vysledek");
 
 const adam = express.Router();
+
+const corsOrigins = ["https://soutez.kozohorsky.xyz", "http://localhost:5500"];
+
+adam.use(cors());
 
 adam.post("/ulozit", (req, res, next) => {
   const { jmeno, prijmeni, body } = req.body;
