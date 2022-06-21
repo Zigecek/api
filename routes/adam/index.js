@@ -5,7 +5,18 @@ const Vysledek = require("../../models/vysledek");
 
 const adam = express.Router();
 
-adam.use(cors({ origin: "https://soutez.kozohorsky.xyz" }));
+var allowlist = ["https://soutez.kozohorsky.xyz/"];
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false }; // disable CORS for this request
+  }
+  callback(null, corsOptions); // callback expects two parameters: error and options
+};
+
+adam.use(cors(corsOptionsDelegate));
 
 adam.post("/ulozit", (req, res, next) => {
   const { jmeno, prijmeni, body } = req.body;
