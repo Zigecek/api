@@ -5,20 +5,7 @@ const Vysledek = require("../../models/vysledek");
 
 const adam = express.Router();
 
-var whitelist = [
-  "https://soutez.kozohorsky.xyz/",
-  "https://soutez.kozohorsky.xyz/#main",
-  "https://soutez.kozohorsky.xyz/#home",
-];
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
+adam.use(cors());
 
 adam.post("/ulozit", cors(corsOptions), (req, res, next) => {
   const { jmeno, prijmeni, body } = req.body;
