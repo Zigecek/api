@@ -26,7 +26,7 @@ adam.post("/ulozit", (req, res, next) => {
     body,
   });
   vysledek.save();
-  res.status(200).redirect("/?alert=ulozeno");
+  res.status(200).send(vysledek);
 });
 
 adam.get("/vysledky", async (req, res, next) => {
