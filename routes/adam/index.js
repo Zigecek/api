@@ -7,7 +7,7 @@ const adam = express.Router();
 
 adam.use(cors());
 
-adam.post("/ulozit", cors(corsOptions), (req, res, next) => {
+adam.post("/ulozit", (req, res, next) => {
   const { jmeno, prijmeni, body } = req.body;
   console.log(req.body);
 
