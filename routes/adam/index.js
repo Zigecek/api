@@ -5,9 +5,7 @@ const Vysledek = require("../../models/vysledek");
 
 const adam = express.Router();
 
-const corsOrigins = ["https://soutez.kozohorsky.xyz", "http://localhost:5500"];
-
-adam.use(cors());
+adam.use(cors({ origin: "https://soutez.kozohorsky.xyz" }));
 
 adam.post("/ulozit", (req, res, next) => {
   const { jmeno, prijmeni, body } = req.body;
@@ -28,7 +26,7 @@ adam.post("/ulozit", (req, res, next) => {
     body,
   });
   vysledek.save();
-  res.status(200).send(vysledek);
+  res.status(200).redirect("/?alert=ulozeno");
 });
 
 adam.get("/vysledky", async (req, res, next) => {
