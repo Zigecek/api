@@ -256,7 +256,8 @@ function rozdeleniPodleBudovy(staty, aktualni) {
   }
 }
 
-function navstiveni(staty) {
+function navstiveni(budovyStaty) {
+  let staty = budovyStaty[0];
   let nejvicNavstiveni = Object.keys(staty)[0];
   for (let i = 1; i < Object.keys(staty).length; i++) {
     // Projdi vsechny stanoviste
