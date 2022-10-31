@@ -4,8 +4,8 @@
   "scripts": {
     "start": "pm2 start ./api.js --time -- trace-warnings",
     "start2": "node ./api.js",
-    "i": "npm i express@latest dotenv@latest mongoose@latest body-parser@latest cors@latest",
-    "uni": "npm uninstall dotenv express mongoose body-parser cors"
+    "i": "npm i express@latest dotenv@latest mongoose@latest body-parser@latest cors@latest shortid@latest",
+    "uni": "npm uninstall dotenv express mongoose body-parser cors shortid"
   },
   "author": "Jan Kozohorský",
   "eslintConfig": {
@@ -24,10 +24,11 @@
     "url": "git+https://github.com/Zigecek/api.git"
   },
   "dependencies": {
-    "body-parser": "^1.20.0",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "mongoose": "^6.4.0"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.0",
+    "shortid": "^2.2.16"
   }
 }
