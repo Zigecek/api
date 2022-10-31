@@ -13,18 +13,16 @@ app.use(bodyparser.json());
 const routes = [];
 
 function addSubs(path) {
-  console.log(path);
   let subs = readdirSync(path, { withFileTypes: true }).filter((dirent) =>
     dirent.isDirectory()
   );
-  console.log(subs);
 
-  for (let sub of subs) {
+  subs.forEach((sub) => {
     routes.push({
       path: "/" + sub.name,
       router: require(join(path, "/", sub.name)),
     });
-  }
+  });
 }
 
 console.log(routes);
