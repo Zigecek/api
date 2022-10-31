@@ -161,6 +161,7 @@ unikovka.get("/sos", async (req, res) => {
     })
   ); // Vrat vsechny sos z databaze
 });
+
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
