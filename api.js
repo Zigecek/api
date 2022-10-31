@@ -20,7 +20,7 @@ var jsdocOptions = {
       },
     },
   },
-  apis: [],
+  apis: [__filename],
 };
 
 const app = express();
@@ -39,7 +39,7 @@ function addSubs(path) {
       path: "/" + sub.name,
       router: require(join(path, "/", sub.name)),
     });
-    jsdocOptions.apis.push(join(path, "/", sub.name, "/index.js"));
+    //jsdocOptions.apis.push(join(path, "/", sub.name, "/index.js"));
   });
 }
 
