@@ -162,6 +162,11 @@ unikovka.get("/sos", async (req, res) => {
   ); // Vrat vsechny sos z databaze
 });
 
+unikovka.get("/vymazatDB", async (req, res) => {
+  await Team.deleteMany({}); // Vymazani vsech teamu z databaze
+  req.status(200).send({ status: "OK" });
+});
+
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
