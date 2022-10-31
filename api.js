@@ -33,6 +33,28 @@ routes.forEach((route) => {
   app.use(route.path, route.router);
 });
 
+// swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+const jsdocOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "API",
+      version: "1.0.0",
+      description: "API",
+      contact: {
+        name: "Jan Kozohorský",
+        email: "jan@kozohorsky.xyz",
+      },
+    },
+  },
+  apis: ["./api.js", "./routes/**/*.js"],
+};
+
+const swaggerSpec = swaggerJsDoc(jsdocOptions);
+
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.listen(process.env.PORT, () => {
   console.log(`API's working on port: ${process.env.PORT}`);
 });
