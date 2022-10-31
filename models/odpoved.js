@@ -9,4 +9,4 @@ const odpovedSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Vysledek", vysledekSchema, "vysledky");
+module.exports = mongoose.model("Odpoved", odpovedSchema, "odpovedi");
