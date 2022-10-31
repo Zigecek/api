@@ -26,6 +26,13 @@ const swaggerSpec = swaggerJsDoc(jsdocOptions);
 
 const app = express();
 app.use(bodyparser.json());
+
+/**
+ * @swagger
+ * /:
+ *  get:
+ *   description: Swagger UI
+ */
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 var routes = [];

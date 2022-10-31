@@ -31,6 +31,18 @@ const pocetUkolu = Object.keys(stanovisteBuilder).length;
 
 unikovka.use(cors());
 
+/**
+ * @swagger
+ * /unikovka/registrace:
+ *  post:
+ *   description: Registrace tymu
+ *  parameters:
+ *  - name: cleni
+ *    description: Seznam clenů
+ *    in: body
+ *    required: true
+ *    type: array
+ */
 unikovka.post("/registrace", async (req, res) => {
   const { cleni } = req.body;
   let uuid = shortid.generate(); // Vygenerovani unikatniho ID
@@ -60,6 +72,23 @@ unikovka.post("/registrace", async (req, res) => {
   res.status(200).send(team);
 });
 
+/**
+ * @swagger
+ * /unikovka/odpoved:
+ *  post:
+ *    description: Odeslani odpovedi
+ *    parameters:
+ *    - name: team_id
+ *      description: ID tymu
+ *      in: body
+ *      required: true
+ *      type: string
+ *    - name: odpoved
+ *      description: Odpoved
+ *      in: body
+ *      required: true
+ *      type: false | true | null
+ */
 unikovka.post("/odpoved", async (req, res) => {
   const [team_id, odpoved_content] = [req.body.team_id, req.body.odpoved]; // Ziskani dat z requestu
   let otazka; // Deklarace promenne pro otazku
@@ -120,6 +149,12 @@ unikovka.post("/odpoved", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /unikovka/vysledky:
+ *  get:
+ *    description: Ziskani vysledku vsech tymu
+ */
 unikovka.get("/vysledky", async (req, res) => {
   // Vytvoreni endpointu pro ziskani vysledku
   let teamy = await Team.find({}); // Ziskani vsech teamu z databaze
@@ -133,6 +168,21 @@ unikovka.get("/vysledky", async (req, res) => {
   }
   res.status(200).send(vysledky);
 });
+
+/**
+ * @swagger
+ * /unikovka/sos:
+ *  get:
+ *    description: Ziskani SOS
+ *  post:
+ *    description: Odeslani SOS
+ *    parameters:
+ *    - name: team_id
+ *      description: ID tymu
+ *      in: body
+ *      required: true
+ *      type: string
+ */
 
 unikovka.post("/sos", async (req, res) => {
   const { team_id } = req.body; // Ziskani dat z requestu
@@ -151,7 +201,6 @@ unikovka.post("/sos", async (req, res) => {
   await sos.save(); // Ulozeni sosu do databaze
   res.status(200).send({ status: "OK" });
 });
-
 unikovka.get("/sos", async (req, res) => {
   let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
   req.status(200).send(
