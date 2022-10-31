@@ -193,7 +193,9 @@ async function noveStanoviste(vyzadovany_team) {
   console.log(stanovisteStaty); // Vypis pocet navstiveni jednotlivych stanovist
 
   let finalniStaty = {};
-  for (const [key, value] of Object.entries(stanovisteStaty)) {
+  Object.keys(stanovisteStaty).forEach((key) => {
+    console.log(key);
+    let value = stanovisteStaty[key];
     if (
       value != false &&
       key != vyzadovany_team.stanoviste.aktualni &&
@@ -202,7 +204,7 @@ async function noveStanoviste(vyzadovany_team) {
       // Pokud je pocet navstiveni stanoviste jine nez false a neni aktualni stanoviste
       finalniStaty[key] = value; // Pridani stanoviste do seznamu dostupnych stanovist
     }
-  }
+  });
 
   console.log(finalniStaty);
 
