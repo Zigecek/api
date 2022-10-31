@@ -27,7 +27,7 @@ const Budova = {
   Stara: 1,
 };
 
-const pocetUkolu = 11;
+const pocetUkolu = Object.keys(stanovisteBuilder).length;
 
 unikovka.use(cors());
 
@@ -112,7 +112,7 @@ unikovka.post("/odpoved", async (req, res) => {
     await team.save(); // Uloz team do databaze
   } else {
     // Pokud je team na poslednim ukolu
-    team.splneneUkoly == pocetUkolu; // Nastav pocet splnenych ukolu na pocet ukolu
+    team.splneneUkoly = pocetUkolu; // Nastav pocet splnenych ukolu na pocet ukolu
     team.dokonceno.limit = false;
     team.dokonceno.cas = Date.now();
     await team.save(); // Uloz team do databaze
