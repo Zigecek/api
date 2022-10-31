@@ -10,7 +10,7 @@ const app = express();
 
 app.use(bodyparser.json());
 
-const routes = [];
+var routes = [];
 
 function addSubs(path) {
   let subs = readdirSync(path, { withFileTypes: true }).filter((dirent) =>
