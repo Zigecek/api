@@ -196,9 +196,10 @@ async function noveStanoviste(vyzadovany_team) {
   Object.keys(stanovisteStaty).forEach((key) => {
     console.log(key);
     let value = stanovisteStaty[key];
+    console.log(value);
     if (
-      value != false &&
-      key != vyzadovany_team.stanoviste.aktualni &&
+      value !== false &&
+      key !== vyzadovany_team.stanoviste.aktualni &&
       !vyzadovany_team.stanoviste.navstivene.includes(key)
     ) {
       // Pokud je pocet navstiveni stanoviste jine nez false a neni aktualni stanoviste
