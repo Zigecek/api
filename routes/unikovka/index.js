@@ -93,7 +93,7 @@ unikovka.post("/odpoved", async (req, res) => {
     team_id,
     stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
   });
-  await  odpoved.save(); // Ulozeni odpovedi do databaze
+  await odpoved.save(); // Ulozeni odpovedi do databaze
 
   if (team.splneneUkoly != pocetUkolu - 1) {
     // Pokud neni team na poslednim ukolu
@@ -172,6 +172,8 @@ async function noveStanoviste(vyzadovany_team) {
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
   let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
 
+  console.log(stanovisteStaty);
+
   for (let i = 0; i < teamy.length; i++) {
     // Projdi vsechny teamy
     let team = teamy[i];
@@ -193,9 +195,15 @@ async function noveStanoviste(vyzadovany_team) {
     }
   }
 
+  console.log(stanovisteStaty);
+
   let finalniStaty = {};
+
+  console.log(finalniStaty);
+
   Object.keys(stanovisteStaty).forEach((key) => {
     let value = stanovisteStaty[key];
+    console.log(key, value);
     if (
       value !== false &&
       key !== vyzadovany_team.stanoviste.aktualni &&
@@ -205,6 +213,8 @@ async function noveStanoviste(vyzadovany_team) {
       finalniStaty[key] = value; // Pridani stanoviste do seznamu dostupnych stanovist
     }
   });
+
+  console.log(finalniStaty);
 
   if (Object.keys(finalniStaty).length == 0) {
     return false; // Zadne stanoviste neni dostupne
