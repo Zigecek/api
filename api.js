@@ -20,10 +20,13 @@ function addSubs(path) {
   for (let sub of subs) {
     routes.push({
       path: "/" + sub.name,
-      router: require(join(path, sub.name)),
+      router: require(join(path, "/", sub.name)),
     });
   }
 }
+
+console.log(routes);
+
 addSubs(join(__dirname, "routes"));
 
 routes.forEach((route) => {
