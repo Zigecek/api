@@ -135,10 +135,27 @@ unikovka.get("/vysledky", async (req, res) => {
   res.status(200).send(vysledky);
 });
 
-unikovka.post("/sos", async (req, res) => {});
+unikovka.post("/sos", async (req, res) => {
+  const { team_id } = req.body; // Ziskani dat z requestu
+  let team = await Team.findOne({ team_id }); // Ziskani teamu z databaze
+  if (!team) {
+    // Pokud nebyl team nalezen
+    res.status(404).send({ error: "Team nebyl nalezen" }); // Vrat chybu
+    return;
+  }
+  const sos = new Sos({
+    // Vytvoreni objektu v databazi
+    _id: mongoose.Types.ObjectId(),
+    stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
+    cas: Date.now(),
+  });
+  sos.save(); // Ulozeni sosu do databaze
+  res.status(200).send({ status: "OK" });
+});
 
-unikovka.get("/sos", async (req, res) => {});
-
+unikovka.get("/sos", async (req, res) => {
+  req.status(200).send(await Sos.find({})); // Vrat vsechny sos z databaze)});
+});
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
