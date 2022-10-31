@@ -31,11 +31,11 @@ const pocetUkolu = 11;
 
 unikovka.use(cors());
 
-unikovka.post("/registrace", (req, res) => {
+unikovka.post("/registrace", async (req, res) => {
   const { cleni } = req.body;
   let uuid = shortid.generate(); // Vygenerovani unikatniho ID
 
-  let stanoviste = noveStanoviste({
+  let stanoviste = await noveStanoviste({
     // Vygenerovani noveho stanoviste
     team_id: uuid,
     stanoviste: {
