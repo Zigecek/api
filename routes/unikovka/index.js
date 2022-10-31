@@ -106,8 +106,7 @@ unikovka.post("/odpoved", async (req, res) => {
       // Pokud je dostupne upravime team v databazi
       team.stanoviste.navstivene.push(team.stanoviste.aktualni);
       team.stanoviste.aktualni = nove;
-      team.splneneUkoly = team.splneneUkoly++; // Zvys pocet splnenych ukolu
-      await team.save();
+      team.splneneUkoly += 1; // Zvys pocet splnenych ukolu
       res.status(200).send({ stanoviste: nove });
     }
     await team.save(); // Uloz team do databaze
