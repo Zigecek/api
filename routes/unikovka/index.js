@@ -172,8 +172,6 @@ async function noveStanoviste(vyzadovany_team) {
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
   let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
 
-  console.log(stanovisteStaty);
-
   for (let i = 0; i < teamy.length; i++) {
     // Projdi vsechny teamy
     let team = teamy[i];
@@ -195,11 +193,7 @@ async function noveStanoviste(vyzadovany_team) {
     }
   }
 
-  console.log(stanovisteStaty);
-
   let finalniStaty = {};
-
-  console.log(finalniStaty);
 
   Object.keys(stanovisteStaty).forEach((key) => {
     let value = stanovisteStaty[key];
@@ -237,6 +231,8 @@ function budova(stanoviste) {
 }
 
 function rozdeleniPodleBudovy(staty, aktualni) {
+  console.log(staty);
+  console.log(aktualni);
   let novaBudova = {};
   let staraBudova = {};
   let aktualniBudova = budova(aktualni); // Zjisteni budovy aktualniho stanoviste
@@ -272,6 +268,7 @@ function rozdeleniPodleBudovy(staty, aktualni) {
 }
 
 function navstiveni(budovyStaty) {
+  console.log(budovyStaty);
   let staty = budovyStaty[0];
   let nejvicNavstiveni = Object.keys(staty)[0];
   for (let i = 1; i < Object.keys(staty).length; i++) {
