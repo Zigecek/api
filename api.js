@@ -18,12 +18,10 @@ function addSubs(path) {
   );
 
   subs.forEach((sub) => {
-    console.log(sub);
     routes.push({
       path: "/" + sub.name,
       router: require(join(path, "/", sub.name)),
     });
-    console.log(routes);
   });
 }
 
