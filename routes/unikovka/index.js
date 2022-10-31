@@ -188,7 +188,7 @@ async function noveStanoviste(vyzadovany_team) {
     }
   }
 
-  stanovisteStaty = {};
+  let finalniStaty = {};
   for (const [key, value] of Object.entries(stanovisteStaty)) {
     if (
       value != false &&
@@ -196,16 +196,16 @@ async function noveStanoviste(vyzadovany_team) {
       !vyzadovany_team.stanoviste.navstivene.includes(key)
     ) {
       // Pokud je pocet navstiveni stanoviste jine nez false a neni aktualni stanoviste
-      stanovisteStaty[key] = value; // Pridani stanoviste do seznamu dostupnych stanovist
+      finalniStaty[key] = value; // Pridani stanoviste do seznamu dostupnych stanovist
     }
   }
 
-  if (Object.keys(stanovisteStaty).length == 0) {
+  if (Object.keys(finalniStaty).length == 0) {
     return false; // Zadne stanoviste neni dostupne
   }
 
   return navstiveni(
-    rozdeleniPodleBudovy(stanovisteStaty, vyzadovany_team.stanoviste.aktualni)
+    rozdeleniPodleBudovy(finalniStaty, vyzadovany_team.stanoviste.aktualni)
   );
 }
 
