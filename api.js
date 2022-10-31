@@ -1,5 +1,7 @@
 require("dotenv").config();
 require("./utils/mongoose").init();
+const { readdir } = require("node:fs/promises");
+const { join } = require("node:path");
 
 const express = require("express");
 const bodyparser = require("body-parser");
@@ -8,12 +10,21 @@ const app = express();
 
 app.use(bodyparser.json());
 
-const routes = [
-  {
-    path: "/adam",
-    router: require("./routes/adam"),
-  },
-];
+const routes = [];
+
+function addSubs(path) {
+  let subs = readdirSync(path, { withFileTypes: true }).filter((dirent) =>
+    dirent.isDirectory()
+  );
+
+  for (let sub of subs) {
+    routes.push({
+      path: "/" + sub.name,
+      router: require(join(path, sub.name)),
+    });
+  }
+}
+addSubs(join(__dirname, "routes"));
 
 routes.forEach((route) => {
   app.use(route.path, route.router);
