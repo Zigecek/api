@@ -6,24 +6,6 @@ const { join } = require("node:path");
 const express = require("express");
 const bodyparser = require("body-parser");
 
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
-var jsdocOptions = {
-  swaggerDefinition: {
-    info: {
-      title: "API",
-      version: "1.0.0",
-      description: "API",
-      contact: {
-        name: "Jan Kozohorský",
-        email: "jan@kozohorsky.xyz",
-      },
-    },
-  },
-  apis: [__filename],
-};
-const swaggerSpec = swaggerJsDoc(jsdocOptions);
-
 const app = express();
 app.use(bodyparser.json());
 
@@ -33,7 +15,6 @@ app.use(bodyparser.json());
  *  get:
  *   description: Swagger UI
  */
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 var routes = [];
 
@@ -47,7 +28,6 @@ function addSubs(path) {
       path: "/" + sub.name,
       router: require(join(path, "/", sub.name)),
     });
-    //jsdocOptions.apis.push(join(path, "/", sub.name, "/index.js"));
   });
 }
 
