@@ -154,7 +154,12 @@ unikovka.post("/sos", async (req, res) => {
 });
 
 unikovka.get("/sos", async (req, res) => {
-  req.status(200).send(await Sos.find({})); // Vrat vsechny sos z databaze)});
+  let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
+  req.status(200).send(
+    soska.map((x) => {
+      x.cas = Date.now() - x.cas;
+    })
+  ); // Vrat vsechny sos z databaze
 });
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
