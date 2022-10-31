@@ -4,6 +4,7 @@ var cors = require("cors");
 const Team = require("../../models/team");
 const Odpoved = require("../../models/odpoved");
 const shortid = require("shortid");
+const Sos = require("../../models/sos");
 
 const unikovka = express.Router();
 
@@ -31,7 +32,7 @@ const pocetUkolu = 11;
 unikovka.use(cors());
 
 unikovka.post("/registrace", (req, res) => {
-  const [cleni] = req.body;
+  const { cleni } = req.body;
   let uuid = shortid.generate(); // Vygenerovani unikatniho ID
 
   let stanoviste = noveStanoviste({
@@ -76,15 +77,24 @@ unikovka.post("/odpoved", async (req, res) => {
       right: odpoved_content,
     };
   }
+
+  let team = await Team.findOne({ team_id }); // Ziskani teamu z databaze
+
+  if (!team) {
+    // Pokud nebyl team nalezen
+    res.status(404).send({ error: "Team nebyl nalezen" }); // Vrat chybu
+    return;
+  }
+
   const odpoved = new Odpoved({
     // Vytvoreni objektu v databazi
     _id: mongoose.Types.ObjectId(),
     otazka,
     team_id,
+    stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
   });
   odpoved.save(); // Ulozeni odpovedi do databaze
 
-  let team = await Team.findOne({ team_id }); // Ziskani teamu z databaze
   if (team.splneneUkoly != pocetUkolu - 1) {
     // Pokud neni team na poslednim ukolu
     let nove = await noveStanoviste(team); // Ziskani noveho stanoviste pro team
@@ -124,6 +134,10 @@ unikovka.get("/vysledky", async (req, res) => {
   }
   res.status(200).send(vysledky);
 });
+
+unikovka.post("/sos", async (req, res) => {});
+
+unikovka.get("/sos", async (req, res) => {});
 
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
@@ -186,7 +200,7 @@ function budova(stanoviste) {
 function rozdeleniPodleBudovy(staty, aktualni) {
   let novaBudova = {};
   let staraBudova = {};
-  let aktualniBudova = budova(aktualni);
+  let aktualniBudova = budova(aktualni); // Zjisteni budovy aktualniho stanoviste
 
   for (const [key, value] of Object.entries(staty)) {
     // Projdi vsechny staty a rozdel je podle budovy
