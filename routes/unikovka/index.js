@@ -167,6 +167,8 @@ async function noveStanoviste(vyzadovany_team) {
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
   let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
 
+  console.log(stanovisteStaty); // Vypis pocet navstiveni jednotlivych stanovist
+
   for (let i = 0; i < teamy.length; i++) {
     // Projdi vsechny teamy
     let team = teamy[i];
@@ -188,6 +190,8 @@ async function noveStanoviste(vyzadovany_team) {
     }
   }
 
+  console.log(stanovisteStaty); // Vypis pocet navstiveni jednotlivych stanovist
+
   let finalniStaty = {};
   for (const [key, value] of Object.entries(stanovisteStaty)) {
     if (
@@ -199,6 +203,8 @@ async function noveStanoviste(vyzadovany_team) {
       finalniStaty[key] = value; // Pridani stanoviste do seznamu dostupnych stanovist
     }
   }
+
+  console.log(finalniStaty);
 
   if (Object.keys(finalniStaty).length == 0) {
     return false; // Zadne stanoviste neni dostupne
