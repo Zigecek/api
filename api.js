@@ -22,10 +22,11 @@ var jsdocOptions = {
   },
   apis: [__filename],
 };
+const swaggerSpec = swaggerJsDoc(jsdocOptions);
 
 const app = express();
-
 app.use(bodyparser.json());
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 var routes = [];
 
@@ -50,11 +51,6 @@ addSubs(join(__dirname, "routes"));
 routes.forEach((route) => {
   app.use(route.path, route.router);
 });
-
-// swagger
-const swaggerSpec = swaggerJsDoc(jsdocOptions);
-
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(process.env.PORT, () => {
   console.log(`API's working on port: ${process.env.PORT}`);
