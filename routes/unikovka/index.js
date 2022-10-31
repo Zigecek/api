@@ -52,10 +52,10 @@ unikovka.post("/registrace", async (req, res) => {
       navstivene: [],
     },
     cleni,
-    pocetUkolu: 0,
+    splneneUkoly: 0,
     vytvoren: Date.now(),
   });
-  team.save(); // Ulozeni teamu do databaze
+  await team.save(); // Ulozeni teamu do databaze
 
   res.status(200).send(team);
 });
@@ -93,7 +93,7 @@ unikovka.post("/odpoved", async (req, res) => {
     team_id,
     stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
   });
-  odpoved.save(); // Ulozeni odpovedi do databaze
+  await  odpoved.save(); // Ulozeni odpovedi do databaze
 
   if (team.splneneUkoly != pocetUkolu - 1) {
     // Pokud neni team na poslednim ukolu
@@ -106,17 +106,17 @@ unikovka.post("/odpoved", async (req, res) => {
       // Pokud je dostupne upravime team v databazi
       team.stanoviste.aktualni = nove;
       team.stanoviste.navstivene.push(nove);
-      team.splneneUkoly++; // Zvys pocet splnenych ukolu
-      team.save();
+      team.splneneUkoly = team.splneneUkoly++; // Zvys pocet splnenych ukolu
+      await team.save();
       res.status(200).send({ stanoviste: nove });
     }
-    team.save(); // Uloz team do databaze
+    await team.save(); // Uloz team do databaze
   } else {
     // Pokud je team na poslednim ukolu
     team.splneneUkoly == pocetUkolu; // Nastav pocet splnenych ukolu na pocet ukolu
     team.dokonceno.limit = false;
     team.dokonceno.cas = Date.now();
-    team.save(); // Uloz team do databaze
+    await team.save(); // Uloz team do databaze
     res.status(200).send({ stanoviste: "Konec" });
   }
 });
@@ -149,7 +149,7 @@ unikovka.post("/sos", async (req, res) => {
     stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
     cas: Date.now(),
   });
-  sos.save(); // Ulozeni sosu do databaze
+  await sos.save(); // Ulozeni sosu do databaze
   res.status(200).send({ status: "OK" });
 });
 
@@ -164,7 +164,7 @@ unikovka.get("/sos", async (req, res) => {
 
 unikovka.get("/vymazatDB", async (req, res) => {
   await Team.deleteMany({}); // Vymazani vsech teamu z databaze
-  req.status(200).send({ status: "OK" });
+  res.status(200).send({ status: "OK" });
 });
 
 async function noveStanoviste(vyzadovany_team) {

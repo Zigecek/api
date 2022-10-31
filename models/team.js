@@ -8,7 +8,7 @@ const teamSchema = mongoose.Schema({
     navstivene: [String],
   },
   cleni: [String],
-  splneneUkoly: Number,
+  splneneUkoly: 0,
   vytvoren: Number,
   dokonceno: {
     limit: Boolean,
