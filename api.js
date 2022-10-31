@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("./utils/mongoose").init();
-const { readdir } = require("node:fs/promises");
+const { readdirSync } = require("node:fs");
 const { join } = require("node:path");
 
 const express = require("express");
