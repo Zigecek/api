@@ -111,7 +111,7 @@ unikovka.post("/odpoved", async (req, res) => {
   });
   await odpoved.save(); // Ulozeni odpovedi do databaze
 
-  if (team.splneneUkoly <= pocetUkolu - 1) {
+  if (team.splneneUkoly < pocetUkolu - 1) {
     if (Date.now() - team.vytvoren > 1000 * 60 * 30) {
       team.stanoviste.navstivene.push(team.stanoviste.aktualni);
       team.stanoviste.aktualni = "x";
@@ -125,7 +125,9 @@ unikovka.post("/odpoved", async (req, res) => {
       if (nove === false) {
         // Pokud zadne stanoviste neni dostupne
         res.status(200).send({ error: "Žádné stanoviště není dostupné" });
-        //???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+        team.stanoviste.navstivene.push(team.stanoviste.aktualni);
+        team.stanoviste.aktualni = "x";
+        team.splneneUkoly += 1;
       } else {
         // Pokud je dostupne upravime team v databazi
         team.stanoviste.navstivene.push(team.stanoviste.aktualni);
@@ -134,16 +136,16 @@ unikovka.post("/odpoved", async (req, res) => {
         res.status(200).send({ stanoviste: nove });
       }
     }
-    await team.save(); // Uloz team do databaze
+     // Uloz team do databaze
   } else {
     // Pokud je team na poslednim ukolu
     team.splneneUkoly = pocetUkolu; // Nastav pocet splnenych ukolu na pocet ukolu
     team.dokonceno.limit = false;
     team.stanoviste.aktualni = "x";
     team.dokonceno.cas = Date.now();
-    await team.save(); // Uloz team do databaze
     res.status(200).send({ stanoviste: "Konec" });
   }
+  await team.save();
 });
 
 /**
