@@ -238,11 +238,11 @@ async function noveStanoviste(vyzadovany_team) {
       // Projdi vsechny stanoviste
       if (team.stanoviste.aktualni === stanoviste) {
         // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
-        stanovisteStaty[stanoviste] = false; // Nastav pocet navstiveni na false
+        stanovisteStaty[stanoviste] = "PLNE"; // Nastav pocet navstiveni na false
       } else {
         if (
           team.stanoviste.navstivene.includes(stanoviste) ||
-          stanovisteStaty[stanoviste] !== false
+          stanovisteStaty[stanoviste] !== "PLNE"
         ) {
           // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
           stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
@@ -254,7 +254,7 @@ async function noveStanoviste(vyzadovany_team) {
   let finalniStaty = {};
   for (const [key, value] of Object.entries(stanovisteStaty)) {
     if (
-      value !== false &&
+      value !== "PLNE" &&
       key !== vyzadovany_team.stanoviste.aktualni &&
       !vyzadovany_team.stanoviste.navstivene.includes(key)
     ) {
