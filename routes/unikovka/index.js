@@ -8,20 +8,6 @@ const Sos = require("../../models/sos");
 
 const unikovka = express.Router();
 
-const stanovisteBuilder = {
-  NU1: 0,
-  NU2: 0,
-  NJID: 0,
-  NCHOD: 0,
-  BU1B: 0,
-  BU2B: 0,
-  BU3B: 0,
-  BCHOD: 0,
-  SKL1: 0,
-  SKL2: 0,
-  SKLCHOD: 0,
-};
-
 const Budova = {
   Nova: 0,
   Stara: 1,
@@ -239,31 +225,43 @@ async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
   teamy = teamy.filter((t) => t.team_id !== vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
   console.log(teamy);
-  let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
+  let aktStanoviste = {
+    NU1: 0,
+    NU2: 0,
+    NJID: 0,
+    NCHOD: 0,
+    BU1B: 0,
+    BU2B: 0,
+    BU3B: 0,
+    BCHOD: 0,
+    SKL1: 0,
+    SKL2: 0,
+    SKLCHOD: 0,
+  }; // Pocet navstiveni jednotlivych stanovist
 
   for (let i = 0; i < teamy.length; i++) {
     // Projdi vsechny teamy
     let team = teamy[i];
     console.log(team.stanoviste.aktualni);
-    for (const [stanoviste, value] of Object.entries(stanovisteStaty)) {
+    for (const [stanoviste, value] of Object.entries(aktStanoviste)) {
       // Projdi vsechny stanoviste
       if (team.stanoviste.aktualni === stanoviste) {
         // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
-        stanovisteStaty[stanoviste] = "PLNE"; // Nastav pocet navstiveni na false
+        aktStanoviste[stanoviste] = "PLNE"; // Nastav pocet navstiveni na false
       } else if (
         team.stanoviste.navstivene.includes(stanoviste) &&
-        stanovisteStaty[stanoviste] !== "PLNE"
+        aktStanoviste[stanoviste] !== "PLNE"
       ) {
         // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
-        stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
+        aktStanoviste[stanoviste]++; // Zvys pocet navstiveni stanoviste
       }
     }
   }
 
-  console.log(stanovisteStaty);
+  console.log(aktStanoviste);
 
   let finalniStaty = {};
-  for (const [key, value] of Object.entries(stanovisteStaty)) {
+  for (const [key, value] of Object.entries(aktStanoviste)) {
     if (
       value !== "PLNE" &&
       key !== vyzadovany_team.stanoviste.aktualni &&
