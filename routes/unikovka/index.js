@@ -251,14 +251,12 @@ async function noveStanoviste(vyzadovany_team) {
       if (team.stanoviste.aktualni === stanoviste) {
         // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
         stanovisteStaty[stanoviste] = "PLNE"; // Nastav pocet navstiveni na false
-      } else {
-        if (
-          team.stanoviste.navstivene.includes(stanoviste) ||
-          stanovisteStaty[stanoviste] !== "PLNE"
-        ) {
-          // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
-          stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
-        }
+      } else if (
+        team.stanoviste.navstivene.includes(stanoviste) &&
+        stanovisteStaty[stanoviste] !== "PLNE"
+      ) {
+        // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
+        stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
       }
     }
   }
