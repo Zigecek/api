@@ -13,7 +13,7 @@ const Budova = {
   Stara: 1,
 };
 
-const pocetUkolu = Object.keys(stanovisteBuilder).length;
+const pocetUkolu = 11;
 
 unikovka.use(cors());
 
