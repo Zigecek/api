@@ -163,7 +163,7 @@ unikovka.get("/vysledky", async (req, res) => {
   for (let i = 0; i < teamy.length; i++) {
     // Pro kazdy team
     let team = teamy[i];
-    team.odpovedi = odpovedi.filter((o) => o.team_id === team.team_id && odpoved.otazka.spravne === true); // Ziskani odpovedi pro team
+    team.odpovedi = odpovedi.filter((o) => o.team_id === team.team_id && o.otazka.spravne === true); // Ziskani odpovedi pro team
     vysledky.push(team); // Pridani teamu s odpovedmi do vysledku
   }
   res.status(200).send(vysledky);
