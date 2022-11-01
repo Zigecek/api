@@ -215,19 +215,16 @@ unikovka.post("/sos", async (req, res) => {
 unikovka.get("/sos", async (req, res) => {
   let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
 
-  let finalniSoska = [];
+  let finalniSoska = "";
 
   soska.forEach((sos) => {
     // Pro kazdy sos
-    finalniSoska.push({
-      stanoviste: sos.stanoviste,
-      stari: Date.now() - sos.cas,
-    });
+    finalniSoska += sos.stanoviste + " " + sos.cas + "\n"; // Pridani do finalniho sosu
   });
 
   finalniSoska.sort((a, b) => {
     // Seradit podle stari
-    return a.stari - b.stari;
+    return b.stari - a.stari;
   });
 
   res.status(200).send(finalniSoska); // Vrat vsechny sos z databaze
