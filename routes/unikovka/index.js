@@ -215,11 +215,17 @@ unikovka.post("/sos", async (req, res) => {
 unikovka.get("/sos", async (req, res) => {
   let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
 
-  res.status(200).send(
-    soska.map((x) => {
-      x.cas = Date.now() - x.cas;
-    })
-  ); // Vrat vsechny sos z databaze
+  let finalniSoska = [];
+
+  soska.forEach((sos) => {
+    // Pro kazdy sos
+    finalniSoska.push({
+      stanoviste: sos.stanoviste,
+      stari: Date.now() - sos.cas,
+    });
+  });
+
+  res.status(200).send(finalniSoska); // Vrat vsechny sos z databaze
 });
 
 unikovka.get("/vymazatDB", async (req, res) => {
