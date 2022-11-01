@@ -245,6 +245,8 @@ async function noveStanoviste(vyzadovany_team) {
     let team = teamy[i];
     for (const [stanoviste, value] of Object.entries(stanovisteStaty)) {
       // Projdi vsechny stanoviste
+      console.log(team.stanoviste.aktualni);
+      console.log(stanoviste);
       if (team.stanoviste.aktualni === stanoviste) {
         // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
         stanovisteStaty[stanoviste] = "PLNE"; // Nastav pocet navstiveni na false
