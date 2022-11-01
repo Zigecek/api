@@ -225,6 +225,11 @@ unikovka.get("/sos", async (req, res) => {
     });
   });
 
+  finalniSoska.sort((a, b) => {
+    // Seradit podle stari
+    return a.stari - b.stari;
+  });
+
   res.status(200).send(finalniSoska); // Vrat vsechny sos z databaze
 });
 
