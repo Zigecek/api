@@ -214,6 +214,7 @@ unikovka.post("/sos", async (req, res) => {
 });
 unikovka.get("/sos", async (req, res) => {
   let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
+
   res.status(200).send(
     soska.map((x) => {
       x.cas = Date.now() - x.cas;
@@ -251,6 +252,8 @@ async function noveStanoviste(vyzadovany_team) {
     }
   }
 
+  console.log(stanovisteStaty);
+
   let finalniStaty = {};
   for (const [key, value] of Object.entries(stanovisteStaty)) {
     if (
@@ -284,8 +287,6 @@ function budova(stanoviste) {
 }
 
 function rozdeleniPodleBudovy(staty, aktualni) {
-  console.log(staty);
-  console.log(aktualni);
   let novaBudova = {};
   let staraBudova = {};
   let aktualniBudova = budova(aktualni); // Zjisteni budovy aktualniho stanoviste
@@ -321,7 +322,6 @@ function rozdeleniPodleBudovy(staty, aktualni) {
 }
 
 function navstiveni(budovyStaty) {
-  console.log(budovyStaty);
   let staty = budovyStaty[0];
   let nejvicNavstiveni = Object.keys(staty)[0];
   for (let i = 1; i < Object.keys(staty).length; i++) {
