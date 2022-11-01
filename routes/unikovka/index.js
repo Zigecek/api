@@ -216,11 +216,12 @@ unikovka.get("/sos", async (req, res) => {
     return b.stari - a.stari;
   });
 
-  let finalniSoska = "";
+  let finalniSoska = "<ol>";
   soskaStari.forEach((sos) => {
     // Pro kazdy sos
-    finalniSoska += sos.stanoviste + " " + sos.stari + "\n"; // Pridani do finalniho sosu
+    finalniSoska += "<li>" + sos.stanoviste + " " + sos.stari + "</li>\n"; // Pridani do finalniho sosu
   });
+  finalniSoska += "</ol>";
 
   
 
