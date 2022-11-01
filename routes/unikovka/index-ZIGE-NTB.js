@@ -27,22 +27,10 @@ const Budova = {
   Stara: 1,
 };
 
-const pocetUkolu = Object.keys(stanovisteBuilder).length;
+const pocetUkolu = 11;
 
 unikovka.use(cors());
 
-/**
- * @swagger
- * /unikovka/registrace:
- *  post:
- *   description: Registrace tymu
- *  parameters:
- *  - name: cleni
- *    description: Seznam clenů
- *    in: body
- *    required: true
- *    type: array
- */
 unikovka.post("/registrace", async (req, res) => {
   const { cleni } = req.body;
   let uuid = shortid.generate(); // Vygenerovani unikatniho ID
@@ -64,31 +52,14 @@ unikovka.post("/registrace", async (req, res) => {
       navstivene: [],
     },
     cleni,
-    splneneUkoly: 0,
+    pocetUkolu: 0,
     vytvoren: Date.now(),
   });
-  await team.save(); // Ulozeni teamu do databaze
+  team.save(); // Ulozeni teamu do databaze
 
   res.status(200).send(team);
 });
 
-/**
- * @swagger
- * /unikovka/odpoved:
- *  post:
- *    description: Odeslani odpovedi
- *    parameters:
- *    - name: team_id
- *      description: ID tymu
- *      in: body
- *      required: true
- *      type: string
- *    - name: odpoved
- *      description: Odpoved
- *      in: body
- *      required: true
- *      type: false | true | null
- */
 unikovka.post("/odpoved", async (req, res) => {
   const [team_id, odpoved_content] = [req.body.team_id, req.body.odpoved]; // Ziskani dat z requestu
   let otazka; // Deklarace promenne pro otazku
@@ -122,48 +93,34 @@ unikovka.post("/odpoved", async (req, res) => {
     team_id,
     stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
   });
-  await odpoved.save(); // Ulozeni odpovedi do databaze
+  odpoved.save(); // Ulozeni odpovedi do databaze
 
   if (team.splneneUkoly != pocetUkolu - 1) {
-    if (Date.now() - team.vytvoren > 1000 * 60 * 30) {
-      team.stanoviste.navstivene.push(team.stanoviste.aktualni);
-      team.stanoviste.aktualni = "";
-      team.splneneUkoly += 1; // Zvys pocet splnenych ukolu
-      res.status(200).send({ error: "Vypršel čas na řešení úkolů" });
-      return;
+    // Pokud neni team na poslednim ukolu
+    let nove = await noveStanoviste(team); // Ziskani noveho stanoviste pro team
+    if (nove == false) {
+      // Pokud zadne stanoviste neni dostupne
+      res.status(200).send({ error: "Žádné stanoviště není dostupné" });
+      //???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
     } else {
-      // Pokud neni team na poslednim ukolu
-      let nove = await noveStanoviste(team); // Ziskani noveho stanoviste pro team
-      if (nove == false) {
-        // Pokud zadne stanoviste neni dostupne
-        res.status(200).send({ error: "Žádné stanoviště není dostupné" });
-        //???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-      } else {
-        // Pokud je dostupne upravime team v databazi
-        team.stanoviste.navstivene.push(team.stanoviste.aktualni);
-        team.stanoviste.aktualni = nove;
-        team.splneneUkoly += 1; // Zvys pocet splnenych ukolu
-        res.status(200).send({ stanoviste: nove });
-      }
+      // Pokud je dostupne upravime team v databazi
+      team.stanoviste.aktualni = nove;
+      team.stanoviste.navstivene.push(nove);
+      team.splneneUkoly++; // Zvys pocet splnenych ukolu
+      team.save();
+      res.status(200).send({ stanoviste: nove });
     }
-    await team.save(); // Uloz team do databaze
+    team.save(); // Uloz team do databaze
   } else {
     // Pokud je team na poslednim ukolu
-    team.splneneUkoly = pocetUkolu; // Nastav pocet splnenych ukolu na pocet ukolu
+    team.splneneUkoly == pocetUkolu; // Nastav pocet splnenych ukolu na pocet ukolu
     team.dokonceno.limit = false;
-    team.stanoviste.aktualni = "";
     team.dokonceno.cas = Date.now();
-    await team.save(); // Uloz team do databaze
+    team.save(); // Uloz team do databaze
     res.status(200).send({ stanoviste: "Konec" });
   }
 });
 
-/**
- * @swagger
- * /unikovka/vysledky:
- *  get:
- *    description: Ziskani vysledku vsech tymu
- */
 unikovka.get("/vysledky", async (req, res) => {
   // Vytvoreni endpointu pro ziskani vysledku
   let teamy = await Team.find({}); // Ziskani vsech teamu z databaze
@@ -177,21 +134,6 @@ unikovka.get("/vysledky", async (req, res) => {
   }
   res.status(200).send(vysledky);
 });
-
-/**
- * @swagger
- * /unikovka/sos:
- *  get:
- *    description: Ziskani SOS
- *  post:
- *    description: Odeslani SOS
- *    parameters:
- *    - name: team_id
- *      description: ID tymu
- *      in: body
- *      required: true
- *      type: string
- */
 
 unikovka.post("/sos", async (req, res) => {
   const { team_id } = req.body; // Ziskani dat z requestu
@@ -207,9 +149,10 @@ unikovka.post("/sos", async (req, res) => {
     stanoviste: team.stanoviste.aktualni, // Ziskani aktualniho stanoviste
     cas: Date.now(),
   });
-  await sos.save(); // Ulozeni sosu do databaze
+  sos.save(); // Ulozeni sosu do databaze
   res.status(200).send({ status: "OK" });
 });
+
 unikovka.get("/sos", async (req, res) => {
   let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
   req.status(200).send(
@@ -219,31 +162,30 @@ unikovka.get("/sos", async (req, res) => {
   ); // Vrat vsechny sos z databaze
 });
 
-unikovka.get("/vymazatDB", async (req, res) => {
-  await Team.deleteMany({}); // Vymazani vsech teamu z databaze
-  res.status(200).send({ status: "OK" });
-});
-
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
   teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
   let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
 
-  for (let i = 0; i < teamy.length; i++) {
-    // Projdi vsechny teamy
-    let team = teamy[i];
-    for (let j = 0; j < Object.keys(stanovisteStaty).length; j++) {
-      // Projdi vsechny stanoviste
-      let stanoviste = Object.keys(stanovisteStaty)[j];
-      if (team.stanoviste.aktualni == stanoviste) {
-        // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
-        stanovisteStaty[stanoviste] = false; // Nastav pocet navstiveni na false
-      } else {
-        if (team.stanoviste.navstivene.includes(stanoviste)) {
-          // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
-          if (stanovisteStaty[stanoviste] != false) {
-            // Pokud je pocet navstiveni stanoviste jine nez false
-            stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
+  console.log(stanovisteStaty);
+
+  if (teamy.length != 0) {
+    for (let i = 0; i < teamy.length; i++) {
+      // Projdi vsechny teamy
+      let team = teamy[i];
+      for (let j = 0; j < Object.keys(stanovisteStaty).length; j++) {
+        // Projdi vsechny stanoviste
+        let stanoviste = Object.keys(stanovisteStaty)[j];
+        if (team.stanoviste.aktualni == stanoviste) {
+          // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
+          stanovisteStaty[stanoviste] = false; // Nastav pocet navstiveni na false
+        } else {
+          if (team.stanoviste.navstivene.includes(stanoviste)) {
+            // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
+            if (stanovisteStaty[stanoviste] != false) {
+              // Pokud je pocet navstiveni stanoviste jine nez false
+              stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
+            }
           }
         }
       }
@@ -253,7 +195,6 @@ async function noveStanoviste(vyzadovany_team) {
   let finalniStaty = {};
   Object.keys(stanovisteStaty).forEach((key) => {
     let value = stanovisteStaty[key];
-    console.log(key, value);
     if (
       value !== false &&
       key !== vyzadovany_team.stanoviste.aktualni &&
@@ -263,8 +204,6 @@ async function noveStanoviste(vyzadovany_team) {
       finalniStaty[key] = value; // Pridani stanoviste do seznamu dostupnych stanovist
     }
   });
-
-  console.log(finalniStaty);
 
   if (Object.keys(finalniStaty).length == 0) {
     return false; // Zadne stanoviste neni dostupne
@@ -287,8 +226,6 @@ function budova(stanoviste) {
 }
 
 function rozdeleniPodleBudovy(staty, aktualni) {
-  console.log(staty);
-  console.log(aktualni);
   let novaBudova = {};
   let staraBudova = {};
   let aktualniBudova = budova(aktualni); // Zjisteni budovy aktualniho stanoviste
@@ -324,7 +261,6 @@ function rozdeleniPodleBudovy(staty, aktualni) {
 }
 
 function navstiveni(budovyStaty) {
-  console.log(budovyStaty);
   let staty = budovyStaty[0];
   let nejvicNavstiveni = Object.keys(staty)[0];
   for (let i = 1; i < Object.keys(staty).length; i++) {
