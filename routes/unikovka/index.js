@@ -55,7 +55,7 @@ unikovka.post("/registrace", async (req, res) => {
       navstivene: [],
     },
   });
-  console.log(nove + " " + uuid);
+  console.log(stanoviste + " " + uuid);
   const team = new Team({
     // Vytvoreni noveho teamu v databazi
     _id: mongoose.Types.ObjectId(),
