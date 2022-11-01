@@ -77,7 +77,7 @@ unikovka.post("/registrace", async (req, res) => {
  *      type: false | true | null
  */
 unikovka.post("/odpoved", async (req, res) => {
-  const [team_id, odpoved_content] = [req.body.team_id, req.body.odpoved]; // Ziskani dat z requestu
+  const {team_id, odpoved_content} = req.body; // Ziskani dat z requestu
   let otazka; // Deklarace promenne pro otazku
   if (odpoved_content === null) {
     // Pokud je odpoved null
@@ -90,7 +90,7 @@ unikovka.post("/odpoved", async (req, res) => {
     otazka = {
       // Nastav otazku na povinnou a uloz odpoved
       required: true,
-      right: odpoved_content,
+      spravne: odpoved_content,
     };
   }
 
