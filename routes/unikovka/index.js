@@ -219,7 +219,7 @@ unikovka.get("/sos", async (req, res) => {
   let finalniSoska = "";
   soskaStari.forEach((sos) => {
     // Pro kazdy sos
-    finalniSoska += sos.stanoviste + " " + sos.cas + "\n"; // Pridani do finalniho sosu
+    finalniSoska += sos.stanoviste + " " + sos.stari + "\n"; // Pridani do finalniho sosu
   });
 
   
