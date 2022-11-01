@@ -238,15 +238,15 @@ unikovka.get("/vymazatDB", async (req, res) => {
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
   teamy = teamy.filter((t) => t.team_id !== vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
+  console.log(teamy);
   let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
 
   for (let i = 0; i < teamy.length; i++) {
     // Projdi vsechny teamy
     let team = teamy[i];
+    console.log(team.stanoviste.aktualni);
     for (const [stanoviste, value] of Object.entries(stanovisteStaty)) {
       // Projdi vsechny stanoviste
-      console.log(team.stanoviste.aktualni);
-      console.log(stanoviste);
       if (team.stanoviste.aktualni === stanoviste) {
         // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
         stanovisteStaty[stanoviste] = "PLNE"; // Nastav pocet navstiveni na false
