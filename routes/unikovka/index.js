@@ -93,7 +93,7 @@ unikovka.post("/registrace", async (req, res) => {
 unikovka.post("/odpoved", async (req, res) => {
   const [team_id, odpoved_content] = [req.body.team_id, req.body.odpoved]; // Ziskani dat z requestu
   let otazka; // Deklarace promenne pro otazku
-  if (odpoved_content == null) {
+  if (odpoved_content === null) {
     // Pokud je odpoved null
     otazka = {
       // pokud nebyla odpoved povinna
@@ -136,7 +136,7 @@ unikovka.post("/odpoved", async (req, res) => {
       // Pokud neni team na poslednim ukolu
       let nove = await noveStanoviste(team); // Ziskani noveho stanoviste pro team
       console.log(nove + " " + team.team_id);
-      if (nove == false) {
+      if (nove === false) {
         // Pokud zadne stanoviste neni dostupne
         res.status(200).send({ error: "Žádné stanoviště není dostupné" });
         //???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
@@ -174,7 +174,7 @@ unikovka.get("/vysledky", async (req, res) => {
   for (let i = 0; i < teamy.length; i++) {
     // Pro kazdy team
     let team = teamy[i];
-    team.odpovedi = odpovedi.filter((o) => o.team_id == team.team_id); // Ziskani odpovedi pro team
+    team.odpovedi = odpovedi.filter((o) => o.team_id === team.team_id); // Ziskani odpovedi pro team
     vysledky.push(team); // Pridani teamu s odpovedmi do vysledku
   }
   res.status(200).send(vysledky);
@@ -214,7 +214,7 @@ unikovka.post("/sos", async (req, res) => {
 });
 unikovka.get("/sos", async (req, res) => {
   let soska = await Sos.find({}); // Ziskani vsech sosu z databaze
-  req.status(200).send(
+  res.status(200).send(
     soska.map((x) => {
       x.cas = Date.now() - x.cas;
     })
@@ -228,27 +228,24 @@ unikovka.get("/vymazatDB", async (req, res) => {
 
 async function noveStanoviste(vyzadovany_team) {
   let teamy = await Team.find({}); // Vsechny teamy
-  teamy = teamy.filter((t) => t.team_id != vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
+  teamy = teamy.filter((t) => t.team_id !== vyzadovany_team.team_id); // Vsechny teamy krome aktualniho
   let stanovisteStaty = stanovisteBuilder; // Pocet navstiveni jednotlivych stanovist
 
-  if (teamy.length != 0) {
-    for (let i = 0; i < teamy.length; i++) {
-      // Projdi vsechny teamy
-      let team = teamy[i];
-      for (let j = 0; j < Object.keys(stanovisteStaty).length; j++) {
-        // Projdi vsechny stanoviste
-        let stanoviste = Object.keys(stanovisteStaty)[j];
-        if (team.stanoviste.aktualni === stanoviste) {
-          // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
-          stanovisteStaty[stanoviste] = false; // Nastav pocet navstiveni na false
-        } else {
-          if (team.stanoviste.navstivene.includes(stanoviste)) {
-            // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
-            if (stanovisteStaty[stanoviste] !== false) {
-              // Pokud je pocet navstiveni stanoviste jine nez false
-              stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
-            }
-          }
+  for (let i = 0; i < teamy.length; i++) {
+    // Projdi vsechny teamy
+    let team = teamy[i];
+    for (const [stanoviste, value] of Object.entries(stanovisteStaty)) {
+      // Projdi vsechny stanoviste
+      if (team.stanoviste.aktualni === stanoviste) {
+        // Pokud je aktualni stanoviste stejne jako aktualni stanoviste v cyklu
+        stanovisteStaty[stanoviste] = false; // Nastav pocet navstiveni na false
+      } else {
+        if (
+          team.stanoviste.navstivene.includes(stanoviste) ||
+          stanovisteStaty[stanoviste] !== false
+        ) {
+          // Pokud je aktualni stanoviste v seznamu navstivenych stanovist
+          stanovisteStaty[stanoviste]++; // Zvys pocet navstiveni stanoviste
         }
       }
     }
@@ -295,26 +292,26 @@ function rozdeleniPodleBudovy(staty, aktualni) {
 
   for (const [key, value] of Object.entries(staty)) {
     // Projdi vsechny staty a rozdel je podle budovy
-    if (budova(key) == Budova.Nova) {
+    if (budova(key) === Budova.Nova) {
       novaBudova[key] = value;
-    } else if (budova(key) == Budova.Stara) {
+    } else if (budova(key) === Budova.Stara) {
       staraBudova[key] = value;
     }
   }
 
-  if (Object.keys(novaBudova).length == 0) {
+  if (Object.keys(novaBudova).length === 0) {
     // Pokud neni zadne stanoviste v nove budove
     return [staraBudova, novaBudova];
-  } else if (Object.keys(staraBudova).length == 0) {
+  } else if (Object.keys(staraBudova).length === 0) {
     // Pokud neni zadne stanoviste v stare budove
     return [novaBudova, staraBudova];
   }
 
   if (aktualniBudova) {
     // Pokud je aktualni stanoviste v nejake budove
-    if (aktualniBudova == Budova.Nova) {
+    if (aktualniBudova === Budova.Nova) {
       return [novaBudova, staraBudova];
-    } else if (aktualniBudova == Budova.Stara) {
+    } else if (aktualniBudova === Budova.Stara) {
       return [staraBudova, novaBudova];
     }
   } else {
