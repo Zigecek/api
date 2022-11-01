@@ -5,6 +5,7 @@ const Team = require("../../models/team");
 const Odpoved = require("../../models/odpoved");
 const shortid = require("shortid");
 const Sos = require("../../models/sos");
+const odpoved = require("../../models/odpoved");
 
 const unikovka = express.Router();
 
@@ -162,7 +163,7 @@ unikovka.get("/vysledky", async (req, res) => {
   for (let i = 0; i < teamy.length; i++) {
     // Pro kazdy team
     let team = teamy[i];
-    team.odpovedi = odpovedi.filter((o) => o.team_id === team.team_id); // Ziskani odpovedi pro team
+    team.odpovedi = odpovedi.filter((o) => o.team_id === team.team_id && odpoved.otazka.spravne === true); // Ziskani odpovedi pro team
     vysledky.push(team); // Pridani teamu s odpovedmi do vysledku
   }
   res.status(200).send(vysledky);
@@ -222,8 +223,6 @@ unikovka.get("/sos", async (req, res) => {
     finalniSoska += "<li>" + sos.stanoviste + " " + sos.stari + "</li>\n"; // Pridani do finalniho sosu
   });
   finalniSoska += "</ol>";
-
-  
 
   res.status(200).send(finalniSoska); // Vrat vsechny sos z databaze
 });
