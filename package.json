@@ -4,8 +4,8 @@
   "scripts": {
     "start": "pm2 start ./api.js --time -- trace-warnings",
     "start2": "node ./api.js",
-    "i": "npm i express@latest dotenv@latest mongoose@latest body-parser@latest cors@latest shortid@latest swagger-jsdoc@latest swagger-ui-express@latest",
-    "uni": "npm uninstall dotenv express mongoose body-parser cors shortid swagger-jsdoc swagger-ui-express"
+    "i": "npm i express@latest dotenv@latest mongoose@latest body-parser@latest cors@latest shortid@latest swagger-jsdoc@latest swagger-ui-express@latest mysql2@latest",
+    "uni": "npm uninstall dotenv express mongoose body-parser cors shortid swagger-jsdoc swagger-ui-express mysql2"
   },
   "author": "Jan Kozohorský",
   "eslintConfig": {
@@ -29,6 +29,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.7.0",
+    "mysql2": "^2.3.3",
     "shortid": "^2.2.16",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0"
